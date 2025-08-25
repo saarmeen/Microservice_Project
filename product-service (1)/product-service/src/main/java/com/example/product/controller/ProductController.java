@@ -24,26 +24,26 @@ public class ProductController {
         this._productService = productService;
     }
 
-    // GET /products/allproducts
+    // http://localhost:8081/products/allproducts
     @GetMapping(path = "/allproducts")
     public List<ProductDto> getAllProducts() {
         return _productService.getAllProducts();
     }
 
-    // GET /products/product/{id}
+    // http://localhost:8081/products/product/1
     @GetMapping(path = "/product/{id}")
     public ProductDto getProductById(@PathVariable("id") Long id) {
         return _productService.getProductById(id);
     }
 
-    // GET /products/product/productname/{id}
+    // http://localhost:8081/products/product/productname/1
     @GetMapping(path = "/product/productname/{id}")
     public String getProductNameById(@PathVariable("id") Long id) {
         return _productService.getProductNameById(id);
     }
 
-    // POST /products/product
-    @PostMapping(path = "/product")
+    // http://localhost:8081/products/add
+    @PostMapping(path = "/add")
     public ProductDto addProduct(@RequestBody ProductDto productDto) {
         return _productService.addProduct(productDto);
     }
