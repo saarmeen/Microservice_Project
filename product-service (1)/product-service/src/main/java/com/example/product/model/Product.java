@@ -5,14 +5,14 @@ import java.time.LocalDateTime;
 
 public class Product {
 
-    private Long id;                // matches AUTO_INCREMENT id
-    private String name;            // VARCHAR(100)
-    private String description;     // TEXT
-    private BigDecimal price;       // DECIMAL(10,2)
-    private int stock;              // INT
-    private LocalDateTime createdAt; // DATETIME
+    private Long id;                
+    private String name;            
+    private String description;     
+    private BigDecimal price;       
+    private int stock;              
+    private LocalDateTime createdAt; 
 
-    // Getters & Setters
+    
     public Long getId() {
         return id;
     }

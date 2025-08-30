@@ -1,12 +1,13 @@
 package com.example.product.repository;
 
-import com.example.product.irepository.iProductRepository;
-import com.example.product.model.Product;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import com.example.product.irepository.iProductRepository;
+import com.example.product.model.Product;
 
 @Repository
 public class ProductRepository implements iProductRepository {
