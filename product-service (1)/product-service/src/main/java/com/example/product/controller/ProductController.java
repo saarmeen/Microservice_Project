@@ -34,15 +34,15 @@ public class ProductController {
 
     // http://localhost:8081/products/product/1
     @GetMapping(path = "/product/{id}")
-    public ProductDto getProductById(@PathVariable("id") Long id) {
-        return _productService.getProductById(id);
+    public ProductDto getProductById(@PathVariable("id") Long productId) {
+        return _productService.getProductById(productId);
     }
 
     // http://localhost:8081/products/product/productname/1
-    @GetMapping(path = "/product/productname/{id}")
-    public String getProductNameById(@PathVariable("id") Long id) {
-        return _productService.getProductNameById(id);
-    }
+    /*@GetMapping(path = "/product/productname/{id}")
+    public String getProductNameById(@PathVariable("id") Long productId) {
+        return _productService.getProductNameById(productId);
+    }*/
 
     // http://localhost:8081/products/add
     @PostMapping(path = "/add")
@@ -58,12 +58,13 @@ public class ProductController {
 
     // http://localhost:8081/products/delete/1
     @DeleteMapping(path = "/delete/{id}")
-    public String deleteProduct(@PathVariable("id") Long id) {
-        boolean deleted =  _productService.deleteProduct(id);
+    public String deleteProduct(@PathVariable("id") Long productId) {
+        boolean deleted =  _productService.deleteProduct(productId);
          if (deleted) {
-         return "This product, Product_ID = " + id + " has been deleted.";
+         return "This product, Product_ID = " + productId + " has been deleted.";
     } else {
-        return "Product with ID = " + id + " not found.";
+        return "Product with ID = " + productId + " not found.";
     }
     }
+    
 }

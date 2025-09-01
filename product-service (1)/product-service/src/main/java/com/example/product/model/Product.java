@@ -3,6 +3,8 @@ package com.example.product.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.example.product.dto.OrderDto;
+
 public class Product {
 
     private Long id;                
@@ -11,6 +13,7 @@ public class Product {
     private BigDecimal price;       
     private int stock;              
     private LocalDateTime createdAt; 
+    private OrderDto orders;
 
     
     public Long getId() {
@@ -59,5 +62,12 @@ public class Product {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+    public OrderDto getOrders() {
+        return orders;
+    }
+
+    public void setOrders(OrderDto orders) {
+        this.orders = orders;
     }
 }

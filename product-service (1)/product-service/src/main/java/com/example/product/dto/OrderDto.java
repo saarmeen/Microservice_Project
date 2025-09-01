@@ -1,4 +1,4 @@
-package com.example.order.dto;
+package com.example.product.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

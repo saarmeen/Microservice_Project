@@ -40,7 +40,8 @@ public class OrderService {
         if (o == null) {
             return null;
         }
-        return modelMapper.map(o, OrderDto.class);
+        OrderDto dto = modelMapper.map(o, OrderDto.class);
+        return dto;
     }
 
     // Get order status by Id
@@ -50,7 +51,7 @@ public class OrderService {
             return null;
         }
         OrderDto dto = new OrderDto();
-        dto.setId(o.getId());
+        dto.setOrderId(o.getId());
         dto.setStatus(o.getStatus());  // only map required field
         return dto;
     }
@@ -76,7 +77,7 @@ public class OrderService {
         Order o = orderRepository.getOrderById(orderId);
         if (o == null) {
             OrderDto dto = new OrderDto();
-            dto.setId(orderId);
+            dto.setOrderId(orderId);
             dto.setMessage("Order with ID = " + orderId + " not found.");
             return dto;
         }

@@ -28,7 +28,7 @@ public class OrderController {
     }
 
     // ✅ Get all orders
-    // GET http://localhost:8082/orders/all
+    // GET http://localhost:8082/orders/allOrders
     @GetMapping("/allOrders")
     public List<OrderDto> getAllOrders() {
         return orderService.getAllOrders();
