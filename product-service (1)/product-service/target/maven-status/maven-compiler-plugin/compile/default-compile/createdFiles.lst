@@ -1,1 +1,12 @@
 com\example\product\ProductServiceApplication.class
+com\example\product\repository\ProductRepository.class
+com\example\product\config\ApplicationConfig.class
+com\example\product\service\ProductService.class
+com\example\product\model\Order.class
+com\example\product\irepository\iProductRepository.class
+com\example\product\model\Product.class
+com\example\product\dto\ProductDto.class
+com\example\product\dto\OrderDto.class
+com\example\product\repository\ProductRowMapper.class
+com\example\product\service\ProductService$1.class
+com\example\product\controller\ProductController.class
