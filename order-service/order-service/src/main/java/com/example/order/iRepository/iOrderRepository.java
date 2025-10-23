@@ -1,6 +1,7 @@
 package com.example.order.iRepository;
 
 import java.util.List;
+
 import com.example.order.model.Order;
 
 public interface iOrderRepository {
@@ -10,4 +11,7 @@ public interface iOrderRepository {
     Order addOrder(Order order);
     Order updateOrder(Order order);
     boolean deleteOrder(Long id);
+
+    List<Order> getOrdersPaginated(int offset, int limit);
+    int countOrders();
 }

@@ -1,5 +1,6 @@
 package com.example.product.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,30 @@ public class ProductRepository implements iProductRepository {
         } catch (Exception e) {
             System.out.println("Error deleting product with id " + id + " : " + e.getMessage());
             return false;
+        }
+    }
+
+     @Override
+    public List<Product> getProductsPaginated(int offset, int limit) {
+    String sql = "SELECT * FROM product LIMIT ? OFFSET ?";
+    try {
+        // Pass parameters in the same order as in SQL: LIMIT, OFFSET
+        return jdbcTemplate.query(sql, new ProductRowMapper(), limit, offset);
+    } catch (Exception e) {
+        System.err.println("Error fetching paginated products: " + e.getMessage());
+        return new ArrayList<>(); // Return empty list instead of null
+    }
+}
+
+
+    @Override
+    public int countProducts() {
+        String sql = "SELECT COUNT(*) FROM product";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+            System.out.println("Error counting products: " + e.getMessage());
+            return 0;
         }
     }
 }

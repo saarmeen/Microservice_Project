@@ -1,5 +1,6 @@
 package com.example.order.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,4 +104,29 @@ public class OrderRepository implements iOrderRepository {
     public String getOrderStatusById(Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public List<Order> getOrdersPaginated(int offset, int limit) {
+    String sql = "SELECT * FROM orders LIMIT ? OFFSET ?";
+    try {
+        // Pass parameters in the same order as in SQL: LIMIT, OFFSET
+        return jdbcTemplate.query(sql, new OrderRowMapper(), limit, offset);
+    } catch (Exception e) {
+        System.err.println("Error fetching paginated orders: " + e.getMessage());
+        return new ArrayList<>(); // Return empty list instead of null
+    }
+}
+
+
+    @Override
+    public int countOrders() {
+        String sql = "SELECT COUNT(*) FROM orders";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+            System.out.println("Error counting orders: " + e.getMessage());
+            return 0;
+        }
+    }
+
 }

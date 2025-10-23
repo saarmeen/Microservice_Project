@@ -2,12 +2,14 @@ package com.example.order.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.order.dto.OrderDto;
+import com.example.order.dto.PaginatedResponse;
 import com.example.order.iRepository.iOrderRepository;
 import com.example.order.model.Order;
 
@@ -22,6 +24,30 @@ public class OrderService {
         this.orderRepository = orderRepository;
         this.modelMapper = modelMapper;
     }
+
+    
+    public PaginatedResponse<OrderDto> getOrdersPaginated(int page, int size) {
+    int totalElements = orderRepository.countOrders();
+    int totalPages = (int) Math.ceil((double) totalElements / size);
+    int offset = page * size;
+
+    // repository returns List<Product>
+    List<Order> orders = orderRepository.getOrdersPaginated(offset, size);
+
+    List<OrderDto> OrderDtos = orders.stream()
+        .map(p -> _ModelMapper.map(p, OrderDto.class))
+        .collect(Collectors.toList());
+
+    // build the PaginatedResponse
+    PaginatedResponse<OrderDto> response = new PaginatedResponse<>();
+    response.setPage(page);
+    response.setSize(size);
+    response.setTotalElements(totalElements);
+    response.setTotalPages(totalPages);
+    response.setOrders(OrderDtos);
+
+    return response; // ✅ now type matches
+}
 
     // Get all orders
     public List<OrderDto> getAllOrders() {

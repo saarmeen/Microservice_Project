@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.order.dto.OrderDto;
+import com.example.order.dto.PaginatedResponse;
 import com.example.order.service.OrderService;
 
 @RestController
@@ -25,6 +27,14 @@ public class OrderController {
     @Autowired
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
+    }
+
+    //Example: http://localhost:8081/products/paginated?page=0&size=3
+     @GetMapping("/paginated")
+    public PaginatedResponse<OrderDto> getPaginatedProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        return orderService.getOrdersPaginated(page, size);
     }
 
     // ✅ Get all orders

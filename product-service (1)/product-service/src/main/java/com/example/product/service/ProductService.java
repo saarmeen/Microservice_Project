@@ -2,6 +2,7 @@ package com.example.product.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,10 @@ import org.springframework.web.client.RestClient;
 
 import com.example.product.dto.OrderDto;
 import com.example.product.dto.ProductDto;
+import com.example.product.dto.PaginatedResponse;
 import com.example.product.irepository.iProductRepository;
 import com.example.product.model.Product;
+
 
 @Service(value = "ProductService")
 @Scope(value = BeanDefinition.SCOPE_SINGLETON)
@@ -31,8 +34,6 @@ public class ProductService {
                           RestClient.Builder restClientBuilder) {
         this._ProductRepository = productRepository;
         this._ModelMapper = modelMapper;
-
-
         _OrderRestClient = restClientBuilder.baseUrl("http://localhost:8082/orders").build();
     }
 
@@ -46,22 +47,43 @@ public class ProductService {
             if (orders == null) {
                 ProductDto dto = _ModelMapper.map(product, ProductDto.class);
                 productDtos.add(dto);
-                continue; // skip products with no orders
+                continue;
             }
 
-            // Collect order IDs or messages
-            List<String> orderMessages = new ArrayList<>();
-            //for (OrderDto order : orders) {
-            //    orderMessages.add("Order#" + order.get_OrderId() + " (" + order.get_Status() + ")");
-            //}
-
-            product.setOrders(orders); 
+            product.setOrders(orders);
             ProductDto dto = _ModelMapper.map(product, ProductDto.class);
             productDtos.add(dto);
         }
 
         return productDtos;
     }
+
+    // ✅ PAGINATION IMPLEMENTATION
+     
+    public PaginatedResponse<ProductDto> getProductsPaginated(int page, int size) {
+    int totalElements = _ProductRepository.countProducts();
+    int totalPages = (int) Math.ceil((double) totalElements / size);
+    int offset = page * size;
+
+    // repository returns List<Product>
+    List<Product> products = _ProductRepository.getProductsPaginated(offset, size);
+
+    List<ProductDto> productDtos = products.stream()
+        .map(p -> _ModelMapper.map(p, ProductDto.class))
+        .collect(Collectors.toList());
+
+    // build the PaginatedResponse
+    PaginatedResponse<ProductDto> response = new PaginatedResponse<>();
+    response.setPage(page);
+    response.setSize(size);
+    response.setTotalElements(totalElements);
+    response.setTotalPages(totalPages);
+    response.setProducts(productDtos);
+
+    return response; // ✅ now type matches
+}
+
+
 
     // Get product by ID with its orders
     public ProductDto getProductById(Long productId) {
@@ -71,11 +93,9 @@ public class ProductService {
         }
 
         OrderDto orders = GetOrdersByProductId(productId);
-        OrderDto orderMessages = new OrderDto();
-        //for (OrderDto order : orders) {
-        //    orderMessages.add("Order#" + order.get_OrderId() + " (" + order.get_Status() + ")");
-        //}
-        product.setOrders(orderMessages);
+        if (orders != null) {
+            product.setOrders(orders);
+        }
 
         return _ModelMapper.map(product, ProductDto.class);
     }
@@ -83,8 +103,6 @@ public class ProductService {
     // Add product
     public ProductDto addProduct(ProductDto productDto) {
         Product product = _ModelMapper.map(productDto, Product.class);
-
-        // save in DB
         Product savedProduct = _ProductRepository.addProduct(product);
         return savedProduct != null ? _ModelMapper.map(savedProduct, ProductDto.class) : null;
     }
@@ -101,15 +119,13 @@ public class ProductService {
         return _ProductRepository.deleteProduct(productId);
     }
 
-    
-
     public OrderDto GetOrdersByProductId(Long productId) {
         try {
-             OrderDto dto = _OrderRestClient.get()
+            OrderDto dto = _OrderRestClient.get()
                     .uri("/order/{id}", productId)
                     .retrieve()
                     .body(new ParameterizedTypeReference<OrderDto>() {});
-                    return dto;
+            return dto;
         } catch (Exception e) {
             System.out.println("Error fetching orders: " + e.getMessage());
             return null;

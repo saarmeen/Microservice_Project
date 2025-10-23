@@ -11,4 +11,8 @@ public interface iProductRepository {
     Product addProduct(Product product);
     Product updateProduct(Product product);
     boolean deleteProduct(Long id);
+
+    // ✅ Pagination support methods
+    List<Product> getProductsPaginated(int offset, int limit);
+    int countProducts();
 }
